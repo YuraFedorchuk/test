@@ -1,21 +1,35 @@
 'use strict';
 
+var _ = require('lodash');
+var uuid = require('node-uuid');
+
 var broker = require('./broker');
 
-module.exports = {
+var Driver = {
+    broker: {},
     foo: function(callback) {
-        broker.process(function(client) {
-            client.foo();
+        var sessionid = uuid.v4();
+
+        getBroker(function(broker) {
+            broker.foo();
             callback(null, 'ok');
         });
     },
     changeFoo: function(callback) {
-        broker.process(function(client) {
-            client.foo = function() {
+        getBroker(function(broker) {
+            broker.foo = function() {
                 console.log('Method foo rewritten');
             };
-            
+
             callback(null, 'ok');
         });
     }
 };
+
+var getBroker = function(sessionId, callback) {
+    broker.process(function(client) {
+        Driver.broker[sessionId] = _.clone(client);
+    });
+};
+
+module.exports = Driver;

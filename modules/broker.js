@@ -1,7 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
-
 var Broker = {
     ready: false,
     client: null,
@@ -15,6 +13,7 @@ var Broker = {
             };
 
             Broker.ready = true;
+            console.log('\n\nBroker initialised\n\n');
         }, 500);
 
         return Broker;
